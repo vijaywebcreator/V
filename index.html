@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UNIQ CLOTHES</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f6fb; --card:#fff; --text:#1f2937; --muted:#6b7280; --primary:#0b58d6; --accent:#ff6b00; --danger:#ff4d4d;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,sans-serif;}
+body{background:var(--bg);color:var(--text);padding-bottom:70px;}
+
+/* Header */
+.header{position:sticky;top:0;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:linear-gradient(90deg,var(--primary),#0062b3);color:#fff;z-index:10;box-shadow:0 4px 8px rgba(0,0,0,0.1);}
+.brand{display:flex;align-items:center;gap:12px;}
+.logo{width:50px;height:50px;border-radius:12px;object-fit:cover;}
+.shop-title{font-weight:800;font-size:20px;}
+.header-actions{display:flex;align-items:center;gap:12px;}
+.cart-icon,.wishlist-icon{position:relative;cursor:pointer;}
+.cart-icon img,.wishlist-icon img{width:28px;height:28px;}
+.cart-count,.wishlist-count{position:absolute; top:-6px; right:-8px; background:#ff3b30; color:#fff; padding:3px 7px; border-radius:999px; font-weight:700; font-size:12px;}
+
+/* Search */
+.search-bar{margin:12px 16px; display:flex; gap:8px;}
+.search-bar input{flex:1; padding:10px 14px; border-radius:10px; border:1px solid #ddd; font-size:14px; transition: all 0.2s;}
+.search-bar input:focus{outline:none; border-color:var(--primary); box-shadow:0 0 6px rgba(11,88,214,0.3);}
+.search-bar button{padding:10px 14px;background:var(--primary);color:#fff;border:none;border-radius:10px;cursor:pointer;transition:all 0.2s;}
+.search-bar button:hover{background:#0051b3;}
+
+/* Hero */
+.hero{position:relative;overflow:hidden;margin:14px 16px;border-radius:16px;}
+.slides{display:flex;transition:transform 0.8s ease-in-out;cursor:pointer;}
+.slide{min-width:100%;height:220px;display:flex;align-items:center;justify-content:center;position:relative;border-radius:16px;padding:12px;}
+.slide img{height:100%;max-height:200px;object-fit:contain;border-radius:12px;transition:transform 0.3s;}
+.slide:hover img{transform:scale(1.05);}
+.slide-card{position:absolute; top:14px; left:16px; padding:6px 12px; border-radius:8px; color:#fff; font-weight:700; font-size:16px; background:rgba(0,0,0,0.45);}
+.dots{display:flex;gap:10px;justify-content:center;padding:12px 0;margin-top:6px;}
+.dot{width:10px;height:10px;border-radius:999px;background:rgba(0,0,0,0.18);cursor:pointer;transition:transform .18s, background .18s;}
+.dot.active{background:rgba(255,255,255,0.95);transform:scale(1.25);}
+
+/* Products */
+.container {
+  display: grid; 
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); /* 160px → 130px */
+  gap: 12px; /* gap थोड़ा कम किया */
+  padding: 16px; 
+  margin-bottom: 20px;
+}
+
+.card img {
+  height: 120px; /* 140px → 120px */
+  object-fit: cover;
+}
+
+.card h4 {
+  font-size: 14px; /* font थोड़ा छोटा किया */
+}
+
+.price {
+  font-size: 13px; /* price text छोटा किया */
+}
+/* Product Modal scrollable for mobile */
+#product-modal .modal-box {
+  max-height: 90vh; /* modal box screen height के 90% तक */
+  overflow-y: auto; /* लंबा content scroll होगा */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Terms */
+.terms-box{background:#fff; padding:18px; margin:16px; border-radius:16px; box-shadow:0 6px 15px rgba(0,0,0,0.08); font-size:13px; line-height:1.5; color:#444;}
+.card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); /* shadow बढ़ाया */
+  position: relative;
+  transition: transform .3s, box-shadow .3s;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); /* hover में shadow और बड़ा */
+}
+/* Categories */
+.popular-categories{display:flex; gap:12px; margin:16px; overflow-x:auto; padding-bottom:12px;}
+.category-card{flex:0 0 120px; background:var(--card); border-radius:16px; padding:12px; text-align:center; box-shadow:0 6px 18px rgba(0,0,0,0.08); cursor:pointer; transition:transform .2s, box-shadow .2s;}
+.category-card:hover{transform:translateY(-4px) scale(1.05);box-shadow:0 8px 22px rgba(0,0,0,0.12);}
+.category-card img{width:60px;height:60px;border-radius:50%;padding:8px;background:#f9f9f9; transition:transform .3s,box-shadow .3s;}
+.category-card img:hover{transform:scale(1.1);box-shadow:0 6px 18px rgba(0,0,0,0.18);}
+
+/* Modals */
+.modal{position:fixed;left:0;right:0;top:0;bottom:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;z-index:120;padding:20px;}
+.modal-box{background:var(--card);padding:20px;border-radius:16px;width:420px;max-width:96%;box-shadow:0 12px 40px rgba(0,0,0,0.18);}
+.modal-box h3{margin-top:0;}
+.modal-box img{width:100%;border-radius:12px;margin-bottom:12px;}
+.modal-box p{margin:6px 0;}
+.modal-box input{width:100%;padding:8px;margin:4px 0;border-radius:6px;border:1px solid #ccc;}
+.modal-box button{cursor:pointer;transition:all .2s;margin-top:6px;}
+.modal-box button.back-btn {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  padding: 8px 14px;
+  margin-bottom: 12px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.2s;
+}
+.modal-box button.back-btn:hover {
+  background: #ff4500;
+  transform: scale(1.05);
+}
+/* Buy Modal Update for Mobile */
+#buy-modal .modal-box{
+  max-height: 90vh;   /* मोबाइल में पूरा स्क्रीन न घेरे */
+  overflow-y: auto;   /* scrollable */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+#buy-modal .back-btn{
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+/* Footer */
+.app-footer{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid rgba(0,0,0,0.06);display:flex;justify-content:space-around;padding:10px 0;z-index:80;box-shadow:0 -4px 12px rgba(0,0,0,0.08);}
+.f-item{display:flex;flex-direction:column;align-items:center;font-weight:600;color:var(--text);font-size:12px;position:relative;cursor:pointer;transition:all 0.2s;}
+.f-item:hover{color:var(--primary); transform:scale(1.1);}
+.f-item img{margin-bottom:4px; transition:all 0.2s;}
+@media(max-width:480px){.f-item img{width:18px;height:18px;} .f-item{font-size:11px;}}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="brand">
+    <img class="logo" src="https://i.ibb.co/Q3gXk4gj/In-Shot-20250919-194218365.jpg" alt="UNIQ CLOTHES">
+    <div class="shop-title">VIJAY PRJAPATI CLOTHES</div>
+  </div>
+  <div class="header-actions">
+    <div class="wishlist-icon" onclick="toggleWishlistModal()">
+      <img src="https://cdn-icons-png.flaticon.com/512/833/833472.png">
+      <span id="wishlist-count" class="wishlist-count">0</span>
+    </div>
+    <div class="cart-icon" onclick="toggleCartModal()">
+      <img src="https://cdn-icons-png.flaticon.com/512/263/263142.png">
+      <span id="cart-count" class="cart-count">0</span>
+    </div>
+  </div>
+</header>
+
+<div class="search-bar">
+  <input type="text" id="search-input" placeholder="Search products..." oninput="searchProducts()">
+  <button onclick="searchProducts()">Search</button>
+</div>
+
+<section class="hero" id="hero-section">
+  <div class="slides" id="slides">
+    <div class="slide"><img src="https://i.ibb.co/N2Q7ZSvM/IMG-20251020-123207.png"><div class="slide-card">T-Shirt Collection</div></div>
+    <div class="slide"><img src="https://i.ibb.co/YMSk9dY/In-Shot-20251020-123605699.png"><div class="slide-card">Jeans Collection</div></div>
+    <div class="slide"><img src="https://i.ibb.co/4g80K2Z9/In-Shot-20251020-123524122.png"><div class="slide-card">Saries Collection</div></div>
+  </div>
+  <div class="dots" id="dots"></div>
+</section>
+<!-- Categories Section under Hero -->
+<section class="popular-categories" id="home-categories">
+  <div class="category-card">
+    <img src="https://i.ibb.co/W4bGy6gg/66abfcfcb407923ae1c1d8a2d00b450d.jpg" alt="T-Shirts">
+    <div>T-Shirts</div>
+  </div>
+  <div class="category-card">
+    <img src="https://i.ibb.co/ksjnrPyN/1c4ca7944f13ecf8cd3adc1403945508.jpg" alt="Jeans">
+    <div>Jeans</div>
+  </div>
+  <div class="category-card">
+    <img src="https://i.ibb.co/hFrsK48V/fafbc44b343c64bd14cf3d062a99e006.jpg" alt="Saries">
+    <div>Saries</div>
+  </div>
+</section>
+<section id="home-section">
+  <div class="container" id="product-list"></div>
+  <div class="terms-box" id="terms-box">Welcome to UNIQ CLOTHES! Shop the latest fashion trends and exclusive collections.</div>
+</section>
+
+<div id="categories-page" class="popular-categories" style="display:none;"></div>
+
+<!-- Product Modal -->
+<div class="modal" id="product-modal">
+  <div class="modal-box">
+    <h3 id="modal-name"></h3>
+    <img id="modal-img"/>
+    <p id="modal-price" style="font-weight:700;"></p>
+    <p id="modal-desc" style="color:#6b5e4c;"></p>
+    <button onclick="openBuyModalCurrent()" style="padding:10px 12px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;width:100%;">Buy Now</button>
+  </div>
+</div>
+
+<!-- Buy Modal -->
+<div class="modal" id="buy-modal">
+  <div class="modal-box">
+    <h3 id="buy-modal-name"></h3>
+    <img id="buy-modal-img"/>
+    <p id="buy-modal-price" style="font-weight:700;"></p>
+    <input type="text" id="buyer-name" placeholder="Name">
+    <input type="text" id="buyer-phone" placeholder="Phone">
+    <input type="text" id="buyer-address" placeholder="Address">
+    <input type="text" id="buyer-landmark" placeholder="Landmark">
+    <input type="text" id="buyer-pincode" placeholder="Pincode">
+    <button id="confirm-buy" style="padding:10px 12px;background:var(--accent);color:#fff;border:none;border-radius:8px;cursor:pointer;width:100%;">Buy via WhatsApp</button>
+    <div style="margin-top:12px; display:flex; gap:8px;">
+      <button onclick="makePayment('paytm')" style="flex:1;padding:8px;background:#FF3F6C;color:#fff;border:none;border-radius:8px;">Paytm</button>
+      <button onclick="makePayment('phonepe')" style="flex:1;padding:8px;background:#00B0FF;color:#fff;border:none;border-radius:8px;">PhonePe</button>
+      <button onclick="makePayment('gpay')" style="flex:1;padding:8px;background:#4285F4;color:#fff;border:none;border-radius:8px;">GPay</button>
+      <button onclick="makePayment('upi')" style="flex:1;padding:8px;background:#4CAF50;color:#fff;border:none;border-radius:8px;">UPI</button>
+    </div>
+  </div>
+</div>
+
+<!-- Cart Modal -->
+<div class="modal" id="cart-modal">
+  <div class="modal-box">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <h3>Your Cart</h3>
+    <div id="cart-items"></div>
+    <p>Total: ₹<span id="total-price">0</span></p>
+  </div>
+</div>
+
+<!-- Wishlist Modal -->
+<div class="modal" id="wishlist-modal">
+  <div class="modal-box">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <h3>Your Wishlist</h3>
+    <div id="wishlist-items"></div>
+  </div>
+</div>
+
+<footer class="app-footer">
+  <div class="f-item" onclick="showHome()">
+    <img src="https://cdn-icons-png.flaticon.com/512/1946/1946436.png">
+    Home
+  </div>
+  <div class="f-item" onclick="showCategories()">
+    <img src="https://cdn-icons-png.flaticon.com/512/1077/1077035.png">
+    Categories
+  </div>
+  <div class="f-item" onclick="toggleCartModal()">
+    <img src="https://cdn-icons-png.flaticon.com/512/263/263142.png">
+    Cart
+  </div>
+</footer>
+
+<script>
+let PRODUCTS = [
+  {
+    id: 1,
+    name: 'Classic White T-Shirt',
+    price: 499,
+    img: 'https://i.ibb.co/twPdv8h7/In-Shot-20251020-123638230.png',
+    desc: 'This classic white T-Shirt is made from 100% breathable cotton, ensuring comfort all day long. Perfect for casual wear, workouts, or layering under jackets. The soft texture is gentle on the skin and durable after multiple washes. Stylish design with a round neck and relaxed fit.',
+    category: 'T-Shirts',
+    brand: 'UNIQ CLOTHES',
+    size: ['S', 'M', 'L', 'XL', 'XXL'],
+    color: 'White',
+    material: '100% Cotton',
+    stock: 50,
+    extraInfo: 'Machine washable. Maintains shape after washing. Ideal for summer and daily wear.'
+  },
+  {
+    id: 2,
+    name: 'Blue Denim Jeans',
+    price: 999,
+    img: 'https://i.ibb.co/YMSk9dY/In-Shot-20251020-123605699.png',
+    desc: 'Stylish blue denim jeans crafted from premium quality denim fabric. Soft inside for comfort and durable outside for long-lasting use. Features a classic 5-pocket style, button closure, and straight-leg fit. Suitable for casual outings, office casual, and semi-formal events.',
+    category: 'Jeans',
+    brand: 'Denim Co.',
+    size: ['28', '30', '32', '34', '36'],
+    color: 'Blue',
+    material: 'Denim',
+    stock: 40,
+    extraInfo: 'Wash inside out to preserve color. Stretchable fabric for ease of movement. Suitable for all seasons.'
+  },
+  {
+    id: 3,
+    name: 'Red Silk Sari',
+    price: 1599,
+    img: 'https://i.ibb.co/4g80K2Z9/In-Shot-20251020-123524122.png',
+    desc: 'Elegant red silk sari with golden zari work. Perfect for weddings, festivals, and traditional ceremonies. The fabric is soft, shiny, and drapes beautifully. Comes with a matching blouse piece. Handcrafted embroidery adds a luxurious feel.',
+    category: 'Saries',
+    brand: 'Ethnic Wear',
+    size: ['Free Size'],
+    color: 'Red with Gold',
+    material: 'Silk',
+    stock: 20,
+    extraInfo: 'Dry clean only. Keep away from direct sunlight to maintain shine. Includes designer pallu embroidery.'
+  },
+  {
+    id: 4,
+    name: 'Blue Winter Jacket',
+    price: 1499,
+    img: 'https://i.ibb.co/M5krM38V/In-Shot-20251020-123441967.png',
+    desc: 'Premium quality winter jacket designed to keep you Blue in cold climates. Outer layer is water-resistant, inner lining is soft fleece for comfort. Features zip closure, side pockets, and adjustable hood. Ideal for casual wear, trekking, and outdoor activities.',
+    category: 'Jackets',
+    brand: 'WinterPro',
+    size: ['M', 'L', 'XL', 'XXL'],
+    color: 'Black',
+    material: 'Polyester & Fleece',
+    stock: 25,
+    extraInfo: 'Machine washable. Lightweight yet insulating. Windproof and durable for harsh winters.'
+  },
+  {
+    id: 5,
+    name: 'Stylish Women Bag',
+    price: 899,
+    img: 'https://i.ibb.co/HfSKHnxT/In-Shot-20251020-123304947.png',
+    desc: 'Trendy women bag made from premium faux leather. Spacious compartments for mobile, wallet, cosmetics, and small essentials. Adjustable shoulder strap and stylish design make it perfect for daily use and parties.',
+    category: 'Bags',
+    brand: 'Fashionista',
+    size: ['One Size'],
+    color: 'Brown',
+    material: 'Faux Leather',
+    stock: 35,
+    extraInfo: 'Durable stitching and high-quality zippers. Easy to clean. Lightweight and comfortable to carry.'
+  },
+  {
+    id: 6,
+    name: 'Running Sneakers',
+    price: 1299,
+    img: 'https://i.ibb.co/v6xcLqRh/In-Shot-20251020-123118074.png',
+    desc: 'High-performance running sneakers designed for maximum comfort and support. Breathable mesh upper, cushioned sole, and rubber grip outsole. Perfect for jogging, gym, and casual wear. Lightweight and flexible.',
+    category: 'Shoes',
+    brand: 'ActiveFeet',
+    size: ['6', '7', '8', '9', '10'],
+    color: 'White & Blue',
+    material: 'Mesh & Rubber',
+    stock: 30,
+    extraInfo: 'Washable upper. Shock absorbing sole for running. Suitable for all terrains.'
+  },
+  {
+    id: 7,
+    name: 'Graphic T-Shirt',
+    price: 599,
+    img: 'https://i.ibb.co/N2Q7ZSvM/IMG-20251020-123207.png',
+    desc: 'Trendy cotton graphic T-Shirt with modern prints. Soft fabric ensures comfort all day. Perfect for casual outings, parties, and streetwear fashion. Round neck, short sleeves, and slim fit design.',
+    category: 'T-Shirts',
+    brand: 'UNIQ CLOTHES',
+    size: ['S', 'M', 'L', 'XL'],
+    color: 'Black',
+    material: '100% Cotton',
+    stock: 25,
+    extraInfo: 'Machine washable. Maintains color after multiple washes. Breathable and lightweight.'
+  },
+  {
+    id: 8,
+    name: 'Elegant Kurta',
+    price: 799,
+    img: 'https://i.ibb.co/DDZL10fd/In-Shot-20251020-123002158.png',
+    desc: 'Beautifully crafted ethnic kurta for men and women. Soft cotton fabric with embroidered patterns. Ideal for festivals, casual outings, and semi-formal events. Comfortable and stylish.',
+    category: 'Ethnic Wear',
+    brand: 'Ethnic Style',
+    size: ['S', 'M', 'L', 'XL', 'XXL'],
+    color: 'Beige',
+    material: 'Cotton',
+    stock: 30,
+    extraInfo: 'Hand wash recommended. Lightweight and breathable for summer wear.'
+  }
+];
+let CART=[],CURRENT=null,WISHLIST=[];
+
+// Toggle Cart
+function toggleCartItem(product){
+  const index=CART.findIndex(p=>p.id===product.id);
+  if(index===-1){CART.push(product);} else{CART.splice(index,1);}
+  renderCart();
+  renderProducts();
+}
+
+// Toggle Wishlist
+function toggleWishlistItem(product){
+  const index=WISHLIST.findIndex(p=>p.id===product.id);
+  if(index===-1){WISHLIST.push(product);} else{WISHLIST.splice(index,1);}
+  renderWishlist();
+  renderProducts();
+}
+
+// Render Products
+function renderProducts(){
+  const container = document.getElementById('product-list');
+  container.innerHTML = '';
+  PRODUCTS.forEach(p => {
+    const inCart = CART.find(c => c.id === p.id);
+    const inWishlist = WISHLIST.find(w => w.id === p.id);
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `
+      <img src="${p.img}">
+      <h4>${p.name}</h4>
+      <p class="price">₹${p.price}</p>
+      <div style="display:flex;justify-content:center;gap:10px;margin-top:6px;">
+        <button onclick="toggleCartItem(PRODUCTS[${p.id-1}]); event.stopPropagation();">
+          ${inCart ? '✅🛒' : '🛒'}
+        </button>
+        <button onclick="toggleWishlistItem(PRODUCTS[${p.id-1}]); event.stopPropagation();">
+          ${inWishlist ? '❤️' : '🤍'}
+        </button>
+      </div>
+    `;
+    div.onclick = () => openProductModal(p);
+    container.appendChild(div);
+  });
+}
+function openProductModal(p){    
+  CURRENT = p;    
+  document.getElementById('modal-name').innerText = p.name;    
+  document.getElementById('modal-img').src = p.img;    
+  document.getElementById('modal-price').innerText = '₹' + p.price;    
+
+  // Short description first
+  const shortDesc = p.desc.length > 120 ? p.desc.slice(0, 120) + '...' : p.desc;
+
+  document.getElementById('modal-desc').innerHTML = `
+    ${shortDesc} 
+    <span id="more-info" style="display:none;">
+      <br><strong>Brand:</strong> ${p.brand} 
+      <br><strong>Material:</strong> ${p.material} 
+      <br><strong>Color:</strong> ${p.color} 
+      <br><strong>Sizes:</strong> ${p.size.join(', ')} 
+      <br><strong>Stock:</strong> ${p.stock} 
+      <br><strong>Extra Info:</strong> ${p.extraInfo}
+    </span>
+    <br><button id="more-btn" style="margin-top:8px;padding:6px 12px;border:none;border-radius:8px;background:#0b58d6;color:#fff;cursor:pointer;">More</button>
+  `;
+
+  // More button click
+  document.getElementById('more-btn').onclick = function(){
+    document.getElementById('more-info').style.display = 'inline';
+    this.style.display = 'none'; // hide the More button
+  }
+
+  document.getElementById('product-modal').style.display = 'flex';    
+  document.getElementById('buy-modal').style.display = 'none';    
+  document.getElementById('cart-modal').style.display = 'none';    
+  document.getElementById('wishlist-modal').style.display = 'none';    
+}
+// Open Buy Modal
+function openBuyModalCurrent() {
+  if (!CURRENT) return;
+  document.getElementById('buy-modal-name').innerText = CURRENT.name;
+  document.getElementById('buy-modal-img').src = CURRENT.img;
+  document.getElementById('buy-modal-price').innerText = '₹' + CURRENT.price;
+  document.getElementById('buy-modal').style.display = 'flex';
+  document.getElementById('product-modal').style.display = 'none';
+}
+
+// Back to Product Modal
+function backToProductModal() {
+  document.getElementById('buy-modal').style.display = 'none';
+  if (CURRENT) document.getElementById('product-modal').style.display = 'flex';
+}
+
+// Go Home
+function goHome() {
+  document.getElementById('home-section').style.display = 'block';
+  document.getElementById('categories-page').style.display = 'none';
+  document.getElementById('product-modal').style.display = 'none';
+  document.getElementById('buy-modal').style.display = 'none';
+  document.getElementById('cart-modal').style.display = 'none';
+  document.getElementById('wishlist-modal').style.display = 'none';
+
+  // Full product list फिर से दिखाओ
+  renderProducts();
+}
+// Cart Modal
+function toggleCartModal() {
+  document.getElementById('cart-modal').style.display = 'flex';
+  document.getElementById('home-section').style.display = 'none';
+  renderCart();
+}
+
+// Wishlist Modal
+function toggleWishlistModal() {
+  document.getElementById('wishlist-modal').style.display = 'flex';
+  document.getElementById('home-section').style.display = 'none';
+  renderWishlist();
+}
+
+// Render Cart
+function renderCart() {
+  const cartContainer = document.getElementById('cart-items');
+  cartContainer.innerHTML = '';
+  let total = 0;
+  CART.forEach(item => {
+    total += item.price;
+    const div = document.createElement('div');
+    div.style.display = 'flex';
+    div.style.justifyContent = 'space-between';
+    div.style.padding = '6px 0';
+    div.innerHTML = `
+      <span>${item.name}</span>
+      <span>₹${item.price}</span>
+    `;
+    cartContainer.appendChild(div);
+  });
+  document.getElementById('total-price').innerText = total;
+  document.getElementById('cart-count').innerText = CART.length;
+}
+
+// Render Wishlist
+function renderWishlist() {
+  const wishContainer = document.getElementById('wishlist-items');
+  wishContainer.innerHTML = '';
+  WISHLIST.forEach(item => {
+    const div = document.createElement('div');
+    div.style.display = 'flex';
+    div.style.justifyContent = 'space-between';
+    div.style.padding = '6px 0';
+    div.innerHTML = `<span>${item.name}</span><span>₹${item.price}</span>`;
+    wishContainer.appendChild(div);
+  });
+  document.getElementById('wishlist-count').innerText = WISHLIST.length;
+}
+
+// Search Products
+function searchProducts() {
+  const query = document.getElementById('search-input').value.toLowerCase();
+  const filtered = PRODUCTS.filter(p => p.name.toLowerCase().includes(query));
+  const container = document.getElementById('product-list');
+  container.innerHTML = '';
+  filtered.forEach(p => {
+    const inCart = CART.find(c => c.id === p.id);
+    const inWishlist = WISHLIST.find(w => w.id === p.id);
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `
+      <img src="${p.img}">
+      <h4>${p.name}</h4>
+      <p class="price">₹${p.price}</p>
+      <div style="display:flex;justify-content:center;gap:10px;margin-top:6px;">
+        <button onclick="toggleCartItem(PRODUCTS[${p.id-1}]); event.stopPropagation();">
+          ${inCart ? '✅🛒' : '🛒'}
+        </button>
+        <button onclick="toggleWishlistItem(PRODUCTS[${p.id-1}]); event.stopPropagation();">
+          ${inWishlist ? '❤️' : '🤍'}
+        </button>
+      </div>
+    `;
+    div.onclick = () => openProductModal(p);
+    container.appendChild(div);
+  });
+}
+
+// Buy via WhatsApp
+document.getElementById('confirm-buy').onclick = function(){
+  const name = document.getElementById('buyer-name').value;
+  const phone = document.getElementById('buyer-phone').value;
+  const address = document.getElementById('buyer-address').value;
+  const landmark = document.getElementById('buyer-landmark').value;
+  const pincode = document.getElementById('buyer-pincode').value;
+  if(!name || !phone || !address){ alert('Please fill Name, Phone, Address'); return; }
+  const msg = `Order: ${CURRENT.name}\nPrice: ₹${CURRENT.price}\nName: ${name}\nPhone: ${phone}\nAddress: ${address}, ${landmark}, ${pincode}`;
+  const url = `https://wa.me/91${7348784181}?text=${encodeURIComponent(msg)}`;
+  window.open(url,'_blank');
+}
+// ✅ Payment Button Functions
+function makePayment(method){
+  if(!CURRENT){alert('No product selected'); return;}
+  let url='';
+  const amount = CURRENT.price;
+  switch(method){
+    case 'phonepe':
+      url = `https://www.phonepe.com/pay?amount=${amount}`;
+      break;
+    case 'gpay':
+      url = `https://pay.google.com/gp/p/ui/pay?amount=${amount}`;
+      break;
+    case 'paytm':
+      url = `https://paytm.com/online-payment?amount=${amount}`;
+      break;
+    case 'upi':
+      const upiId = prompt('Enter UPI ID to pay:');
+      if(!upiId) return;
+      url = `upi://pay?pa=${encodeURIComponent(upiId)}&am=${amount}&cu=INR&tn=${encodeURIComponent(CURRENT.name)}`;
+      break;
+  }
+  window.open(url,'_blank');
+}
+// Show Home
+function showHome(){ goHome(); }
+
+function showCategories() {
+  document.getElementById('home-section').style.display = 'none';
+  const catPage = document.getElementById('categories-page');
+  catPage.style.display = 'flex';
+  catPage.innerHTML = '';
+  
+  // Unique categories
+  const categories = [...new Set(PRODUCTS.map(p => p.category))];
+  
+  categories.forEach(cat => {
+    const div = document.createElement('div');
+    div.className = 'category-card';
+    
+    // पहला product image उस category का
+    const catImage = PRODUCTS.find(p => p.category === cat).img;
+    
+    div.innerHTML = `<img src="${catImage}" alt="${cat}"><div>${cat}</div>`;
+    
+    // Category क्लिक पर filtered products दिखाएँ
+    div.onclick = () => {
+      catPage.style.display = 'none';
+      document.getElementById('home-section').style.display = 'block';
+      const filtered = PRODUCTS.filter(p => p.category === cat);
+      renderProductsByFilter(filtered);
+    };
+    
+    catPage.appendChild(div);
+  });
+}
+
+// Helper function (जैसा पहले बनाया)
+function renderProductsByFilter(filtered) {
+  const container = document.getElementById('product-list');
+  container.innerHTML = '';
+  filtered.forEach(p => {
+    const inCart = CART.find(c => c.id === p.id);
+    const inWishlist = WISHLIST.find(w => w.id === p.id);
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `
+      <img src="${p.img}">
+      <h4>${p.name}</h4>
+      <p class="price">₹${p.price}</p>
+      <div style="display:flex;justify-content:center;gap:10px;margin-top:6px;">
+        <button onclick="toggleCartItem(PRODUCTS[${p.id-1}]); event.stopPropagation();">
+          ${inCart ? '✅🛒' : '🛒'}
+        </button>
+        <button onclick="toggleWishlistItem(PRODUCTS[${p.id-1}]); event.stopPropagation();">
+          ${inWishlist ? '❤️' : '🤍'}
+        </button>
+      </div>
+    `;
+    div.onclick = () => openProductModal(p);
+    container.appendChild(div);
+  });
+}
+// Hero Slider
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slide');
+const dotsContainer = document.getElementById('dots');
+slides.forEach((_,i)=>{
+  const dot = document.createElement('div');
+  dot.className='dot';
+  dot.onclick = ()=>showSlide(i);
+  dotsContainer.appendChild(dot);
+});
+function showSlide(index){
+  currentSlide=index;
+  const slidesDiv=document.getElementById('slides');
+  slidesDiv.style.transform=`translateX(-${index*100}%)`;
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===index));
+}
+function nextSlide(){
+  currentSlide=(currentSlide+1)%slides.length;
+  showSlide(currentSlide);
+}
+setInterval(nextSlide,3000);
+showSlide(0);
+
+// Initial Render
+renderProducts();
+renderCart();
+renderWishlist();
+// ================= Modal Stack & Back Button with Vibration =================
+let modalStack = []; // Stack to track open modals
+
+// Open modal (generic)
+function openModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (!modal) return;
+  modal.style.display = 'flex';
+  // Hide other modals if needed
+  document.querySelectorAll('.modal').forEach(m => { if(m.id!==modalId) m.style.display='none'; });
+  modalStack.push(modalId);
+  updateHistory();
+}
+
+// Close top modal
+function closeModal() {
+  if (modalStack.length === 0) return;
+  const top = modalStack.pop();
+  const modal = document.getElementById(top);
+  if (modal) modal.style.display = 'none';
+  // Show previous modal if exists
+  if (modalStack.length > 0) {
+    const prev = document.getElementById(modalStack[modalStack.length-1]);
+    if(prev) prev.style.display = 'flex';
+  } else {
+    // Show home if no modal
+    goHome();
+  }
+}
+
+// Update browser history for back button
+function updateHistory() {
+  history.pushState({modalStack: [...modalStack]}, '');
+}
+
+// Listen to back button (popstate)
+window.addEventListener('popstate', function(e) {
+  if (modalStack.length > 0) {
+    closeModal();
+    // Vibration feedback (if supported)
+    if (navigator.vibrate) navigator.vibrate(50);
+  } else {
+    history.back(); // normal back
+  }
+});
+
+// ==================== Specific Modal Open Functions ====================
+function openProductModalStack(p){
+  CURRENT = p;    
+  document.getElementById('modal-name').innerText = p.name;    
+  document.getElementById('modal-img').src = p.img;    
+  document.getElementById('modal-price').innerText = '₹' + p.price;    
+  const shortDesc = p.desc.length > 120 ? p.desc.slice(0, 120) + '...' : p.desc;
+  document.getElementById('modal-desc').innerHTML = `
+    ${shortDesc} 
+    <span id="more-info" style="display:none;">
+      <br><strong>Brand:</strong> ${p.brand} 
+      <br><strong>Material:</strong> ${p.material} 
+      <br><strong>Color:</strong> ${p.color} 
+      <br><strong>Sizes:</strong> ${p.size.join(', ')} 
+      <br><strong>Stock:</strong> ${p.stock} 
+      <br><strong>Extra Info:</strong> ${p.extraInfo}
+    </span>
+    <br><button id="more-btn" style="margin-top:8px;padding:6px 12px;border:none;border-radius:8px;background:#0b58d6;color:#fff;cursor:pointer;">More</button>
+  `;
+  document.getElementById('more-btn').onclick = function(){
+    document.getElementById('more-info').style.display = 'inline';
+    this.style.display = 'none';
+  }
+  openModal('product-modal');
+}
+
+function openBuyModalCurrentStack() {
+  if (!CURRENT) return;
+  document.getElementById('buy-modal-name').innerText = CURRENT.name;
+  document.getElementById('buy-modal-img').src = CURRENT.img;
+  document.getElementById('buy-modal-price').innerText = '₹' + CURRENT.price;
+  openModal('buy-modal');
+}
+
+// Update buttons to use stack logic
+document.querySelectorAll('#product-modal .back-btn').forEach(btn=>{
+  btn.onclick = () => closeModal();
+});
+document.querySelectorAll('#buy-modal .back-btn').forEach(btn=>{
+  btn.onclick = () => closeModal();
+});
+document.querySelectorAll('#cart-modal .back-btn').forEach(btn=>{
+  btn.onclick = () => closeModal();
+});
+document.querySelectorAll('#wishlist-modal .back-btn').forEach(btn=>{
+  btn.onclick = () => closeModal();
+});
+
+// Update existing open functions to use stack
+function openProductModal(p){ openProductModalStack(p); }
+function openBuyModalCurrent(){ openBuyModalCurrentStack(); }
+function toggleCartModal(){ openModal('cart-modal'); renderCart(); }
+function toggleWishlistModal(){ openModal('wishlist-modal'); renderWishlist(); }
+
+// Go Home clears all modals & stack
+function goHome(){
+  document.getElementById('home-section').style.display='block';
+  document.getElementById('categories-page').style.display='none';
+  document.querySelectorAll('.modal').forEach(m=>m.style.display='none');
+  modalStack = [];
+  renderProducts();
+}
+
+// Category & Hero logic remains same, just open modals using stack functions
+</script>
+
+</body>
+</html>
